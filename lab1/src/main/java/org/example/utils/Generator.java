@@ -16,11 +16,30 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+/**
+ * Данный класс содержит методы для генерации объектов.
+ */
 public class Generator {
+    /**
+     * Константа, задающая верхнюю границу для случайного целого числа.
+     */
     private static final int MAX_GENERATED_INT = 40;
+
+    /**
+     * Константа, задающая нижнюю границу длины для названия команды.
+     */
     private static final int MIN_TEAM_NAME_LEN = 5;
+
+    /**
+     * Константа, задающая верхнюю границу длины для названия команды.
+     */
     private static final int MAX_TEAM_NAME_LEN = 10;
 
+    /**
+     * Данный метод позволяет сгенерировать случайный матч.
+     *
+     * @return Случайно сгенерированный объект класса {@link Match}, описывающий случайный матч.
+     */
     public static @NotNull Match generateMatch() {
         Team team1 = isReturnNull() ? null : generateTeam();
         Team team2 = isReturnNull() ? null : generateTeam();
@@ -40,6 +59,11 @@ public class Generator {
         return new Match(team1, team2, startDateTime, endDateTime, tournament, scoreTeam1, scoreTeam2, matchType, map);
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайный турнир.
+     *
+     * @return Случайно сгенерированный объект класса {@link Tournament}, описывающий случайный турнир.
+     */
     @Contract(" -> new")
     public static @NotNull Tournament generateTournament() {
         String name = generateString(generateInt());
@@ -55,6 +79,11 @@ public class Generator {
         return new Tournament(name, place, endDate, startDate);
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайную команду.
+     *
+     * @return Случайно сгенерированный объект класса {@link Team}, описывающий случайную команду.
+     */
     public static @NotNull Team generateTeam() {
         String name = generateString(generateIntInRange(MIN_TEAM_NAME_LEN, MAX_TEAM_NAME_LEN));
 
@@ -64,23 +93,56 @@ public class Generator {
         return new Team(name, members, generateInt(), generateInt());
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайный тип матча.
+     *
+     * @return Если условие для возвращения <code>null</code> - истинное, то возвращается <code>null</code>. Иначе -
+     * случайно сгенерированный элемент перечисления {@link MatchType}.
+     */
     private static @Nullable MatchType generateMatchType() {
         MatchType[] types = MatchType.values();
         return isReturnNull() ? null : types[generateIntInRange(0, types.length)];
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайное целое число в заданном диапазоне.
+     *
+     * @param min нижняя граница для генерации числа.
+     * @param max верхняя граница (включительно) для генерации числа.
+     * @return Случайно сгенерированное целое число в заданном диапазоне.
+     */
     private static int generateIntInRange(int min, int max) {
         return new Random().nextInt(max - min + 1) + min;
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайное целое число от 1 до MAX_GENERATED_INT включительно.
+     *
+     * @return Случайно сгенерированное целое число от 1 до MAX_GENERATED_INT включительно.
+     */
     private static int generateInt() {
         return new Random().nextInt(MAX_GENERATED_INT) + 1;
     }
 
+    /**
+     * Данный метод генерирует случайное число и проверяет его на соответствие условию.
+     * </br>
+     * Используется другими генераторами для того, чтоб определить, присвоить переменной <code>null</code> или некоторое
+     * сгенерированное значение.
+     *
+     * @return Если условие истинно - <code>true</code>. Иначе - <code>false</code>.
+     */
     private static boolean isReturnNull() {
         return generateIntInRange(0, 99) > 49;
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайную строку необходимой длины.
+     *
+     * @param len необходимая длина строки.
+     * @return Если условие для возвращения <code>null</code> - истинное, то возвращается <code>null</code>. Иначе -
+     * сгенерированная случайным образом строка запрашиваемой длины.
+     */
     @Contract("_ -> new")
     private static @Nullable String generateString(int len) {
         String candidateChars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVbWwXxYyZz1234567890!@#$%^&*()?{}[]<>";
@@ -94,6 +156,12 @@ public class Generator {
         return isReturnNull() ? null : res.toString();
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайным образом объект класса {@link LocalDateTime}.
+     *
+     * @return Если условие для возвращения <code>null</code> - истинное, то возвращается <code>null</code>. Иначе -
+     * сгенерированный случайным образом объект класса {@link LocalDateTime}.
+     */
     private static @Nullable LocalDateTime generateLocalDateTime() {
         int startSeconds = LocalTime.MIN.toSecondOfDay();
         int endSeconds = LocalTime.MAX.toSecondOfDay();
@@ -107,6 +175,12 @@ public class Generator {
         return isReturnNull() ? null : LocalDateTime.of(date, time);
     }
 
+    /**
+     * Данный метод позволяет сгенерировать случайным образом объект класса {@link LocalDate}.
+     *
+     * @return Если условие для возвращения <code>null</code> - истинное, то возвращается <code>null</code>. Иначе -
+     * сгенерированный случайным образом объект класса {@link LocalDate}.
+     */
     @Contract(" -> new")
     private static @Nullable LocalDate generateLocalDate() {
         return isReturnNull() ? null : LocalDate.ofEpochDay(generateIntInRange(50, 12000));
