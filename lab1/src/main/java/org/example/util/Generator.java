@@ -1,4 +1,4 @@
-package org.example.utils;
+package org.example.util;
 
 import org.example.entity.Match;
 import org.example.entity.Team;
@@ -14,6 +14,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -36,11 +38,55 @@ public class Generator {
     private static final int MAX_TEAM_NAME_LEN = 10;
 
     /**
+     * Данный метод позволяет сгенерировать необходимое количество объектов класса {@link Match}.
+     *
+     * @param count количество объектов, которое необходимо сгенерировать.
+     * @return Список объектов класса {@link Match}, количество которых равно запрашиваемому.
+     */
+    public static @NotNull ArrayList<Match> generateMatchCollection(int count) {
+        return (ArrayList<Match>) generateCollection(count, o -> generateMatch());
+    }
+
+    /**
+     * Данный метод позволяет сгенерировать необходимое количество объектов класса {@link Tournament}.
+     *
+     * @param count количество объектов, которое необходимо сгенерировать.
+     * @return Список объектов класса {@link Tournament}, количество которых равно запрашиваемому.
+     */
+    public static @NotNull ArrayList<Tournament> generateTournamentCollection(int count) {
+        return (ArrayList<Tournament>) generateCollection(count, o -> generateTournament());
+    }
+
+    /**
+     * Данный метод позволяет сгенерировать необходимое количество объектов класса {@link Team}.
+     *
+     * @param count количество объектов, которое необходимо сгенерировать.
+     * @return Список объектов класса {@link Team}, количество которых равно запрашиваемому.
+     */
+    public static @NotNull ArrayList<Team> generateTeamCollection(int count) {
+        return (ArrayList<Team>) generateCollection(count, o -> generateTeam());
+    }
+
+    /**
+     * Данный метод позволяет вернуть коллекцию объектов, состоящую из необходимого количества объектов.
+     *
+     * @param count       количество объектов, которое необходимо сгенерировать.
+     * @param intFunction функция, вызывающая необходимый генератор.
+     * @return Список объектов, количество которых равно запрашиваемому, а тип объектов соответствует переданной функции
+     * генерации.
+     */
+    private static ArrayList<?> generateCollection(int count, IntFunction<?> intFunction) {
+        return IntStream.range(0, count)
+                .mapToObj(intFunction)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
      * Данный метод позволяет сгенерировать случайный матч.
      *
      * @return Случайно сгенерированный объект класса {@link Match}, описывающий случайный матч.
      */
-    public static @NotNull Match generateMatch() {
+    private static @NotNull Match generateMatch() {
         Team team1 = isReturnNull() ? null : generateTeam();
         Team team2 = isReturnNull() ? null : generateTeam();
 
@@ -65,7 +111,7 @@ public class Generator {
      * @return Случайно сгенерированный объект класса {@link Tournament}, описывающий случайный турнир.
      */
     @Contract(" -> new")
-    public static @NotNull Tournament generateTournament() {
+    private static @NotNull Tournament generateTournament() {
         String name = generateString(generateInt());
         String place = generateString(generateInt());
 
@@ -84,7 +130,7 @@ public class Generator {
      *
      * @return Случайно сгенерированный объект класса {@link Team}, описывающий случайную команду.
      */
-    public static @NotNull Team generateTeam() {
+    private static @NotNull Team generateTeam() {
         String name = generateString(generateIntInRange(MIN_TEAM_NAME_LEN, MAX_TEAM_NAME_LEN));
 
         int membersCount = generateInt();
@@ -101,7 +147,7 @@ public class Generator {
      */
     private static @Nullable MatchType generateMatchType() {
         MatchType[] types = MatchType.values();
-        return isReturnNull() ? null : types[generateIntInRange(0, types.length)];
+        return isReturnNull() ? null : types[generateIntInRange(0, types.length - 1)];
     }
 
     /**
