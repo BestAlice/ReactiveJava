@@ -2,6 +2,7 @@ package org.example.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.example.interfaces.IReactive;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
-public class Team {
+public class Team implements IReactive {
     /**
      * Название команды.
      */
