@@ -1,1 +1,0 @@
-public record Tournament (String Name, String Place, Date start_date, Date end_date){}
