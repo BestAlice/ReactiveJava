@@ -11,19 +11,28 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * В данном классе вызываются методы для расчета статистических функций итерационным способом.
  */
 public class CountByLoop {
     /**
+     * Объект класса {@link Logger}, используемый для логирования.
+     */
+    private static final Logger LOGGER = Logger.getLogger(CountByLoop.class.getName());
+
+    /**
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
      * каждого из методов.
      *
      * @param matchArrayList список объектов класса {@link Match}, для которых необходимо рассчитать статистические
      *                       характеристики.
+     * @param delay          количество секунд, на которое нужно установить задержку.
      */
-    public static void countByLoop(ArrayList<Match> matchArrayList) {
+    public static void countByLoop(ArrayList<Match> matchArrayList, int delay) {
         int members1 = 2, members2 = 3;
         int score1 = 5, score2 = 10;
         int length = 7;
@@ -42,7 +51,7 @@ public class CountByLoop {
                 countMatchesWithSpecifiedType=%d
                 
                 """.formatted(
-                countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2),
+                countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay),
                 countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2),
                 countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length),
                 countMatchesWithSpecifiedType(matchArrayList, matchType)
@@ -60,7 +69,13 @@ public class CountByLoop {
      * @return Количество матчей, удовлетворяющих условию.
      */
     private static int countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
-                                                                  int members2) {
+                                                                  int members2, int delay) {
+        try {
+            TimeUnit.SECONDS.sleep(delay);
+            LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
+        } catch (InterruptedException ex) {
+            LOGGER.log(Level.WARNING, "Не удалось установить задержку!");
+        }
         int count = 0;
         for (Match match : matchArrayList) {
             Team team1 = match.getTeam1();

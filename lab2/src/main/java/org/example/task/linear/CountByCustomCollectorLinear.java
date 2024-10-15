@@ -1,5 +1,6 @@
-package org.example.task;
+package org.example.task.linear;
 
+import org.example.collector.ReactiveCollector;
 import org.example.entity.Match;
 import org.example.entity.Team;
 import org.example.entity.Tournament;
@@ -11,19 +12,28 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * В данном классе вызываются методы для расчета статистических функций итерационным способом.
+ * В данном классе вызываются методы для расчета статистических функций с использованием собственного коллектора.
  */
-public class CountByLoop {
+public class CountByCustomCollectorLinear {
+    /**
+     * Объект класса {@link Logger}, используемый для логирования.
+     */
+    private static final Logger LOGGER = Logger.getLogger(CountByCustomCollectorLinear.class.getName());
+
     /**
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
      * каждого из методов.
      *
      * @param matchArrayList список объектов класса {@link Match}, для которых необходимо рассчитать статистические
      *                       характеристики.
+     * @param delay          количество секунд, на которое нужно установить задержку.
      */
-    public static void countByLoop(ArrayList<Match> matchArrayList) {
+    public static void countByCustomCollectorLinear(ArrayList<Match> matchArrayList, int delay) {
         int members1 = 2, members2 = 3;
         int score1 = 5, score2 = 10;
         int length = 7;
@@ -34,7 +44,7 @@ public class CountByLoop {
         System.out.printf("""
                 
                 
-                ----------------------CountByLoop----------------------
+                ----------------------CountByCustomCollector----------------------
                 
                 countMatchesWithSpecifiedTeamsMembersCount=%d,
                 countMatchesWithSpecifiedTeamsScores=%d,
@@ -42,7 +52,7 @@ public class CountByLoop {
                 countMatchesWithSpecifiedType=%d
                 
                 """.formatted(
-                countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2),
+                countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay),
                 countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2),
                 countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length),
                 countMatchesWithSpecifiedType(matchArrayList, matchType)
@@ -59,17 +69,19 @@ public class CountByLoop {
      *                       данное значение.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private static int countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
-                                                                  int members2) {
-        int count = 0;
-        for (Match match : matchArrayList) {
+    private static long countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
+                                                                   int members2, int delay) {
+        try {
+            TimeUnit.SECONDS.sleep(delay);
+            LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
+        } catch (InterruptedException ex) {
+            LOGGER.log(Level.WARNING, "Не удалось установить задержку!");
+        }
+        return matchArrayList.stream().filter(match -> {
             Team team1 = match.getTeam1();
             Team team2 = match.getTeam2();
-            if (team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2) {
-                count++;
-            }
-        }
-        return count;
+            return team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2;
+        }).collect(new ReactiveCollector()).size();
     }
 
     /**
@@ -81,13 +93,9 @@ public class CountByLoop {
      * @return Количество матчей, удовлетворяющих условию.
      */
     private static int countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
-        int count = 0;
-        for (Match match : matchArrayList) {
-            if (match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2) {
-                count++;
-            }
-        }
-        return count;
+
+        return matchArrayList.stream().filter(match -> match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2)
+                .collect(new ReactiveCollector()).size();
     }
 
     /**
@@ -101,15 +109,11 @@ public class CountByLoop {
      */
     private static int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull ArrayList<Match> matchArrayList,
                                                                                  LocalDateTime localDateTime, int length) {
-        int count = 0;
-        for (Match match : matchArrayList) {
+        return matchArrayList.stream().filter(match -> {
             LocalDateTime startTime = match.getStartDateTime();
             Tournament tournament = match.getTournament();
-            if (startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length) {
-                count++;
-            }
-        }
-        return count;
+            return startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length;
+        }).collect(new ReactiveCollector()).size();
     }
 
     /**
@@ -121,12 +125,7 @@ public class CountByLoop {
      */
     @Contract(pure = true)
     private static int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
-        int count = 0;
-        for (Match match : matchArrayList) {
-            if (match.getMatchType() != null && match.getMatchType() == matchType) {
-                count++;
-            }
-        }
-        return count;
+        return matchArrayList.stream().filter(match -> match.getMatchType() != null && match.getMatchType() == matchType)
+                .collect(new ReactiveCollector()).size();
     }
 }

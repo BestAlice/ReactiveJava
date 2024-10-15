@@ -1,8 +1,6 @@
 package org.example;
 
 import org.example.entity.Match;
-import org.example.entity.Team;
-import org.example.entity.Tournament;
 
 import java.util.ArrayList;
 
@@ -10,9 +8,10 @@ import static org.example.task.CountByCustomCollector.countByCustomCollector;
 import static org.example.task.CountByDefaultCollector.countByDefaultCollector;
 import static org.example.task.CountByLoop.countByLoop;
 import static org.example.util.Generator.generateMatchCollection;
-import static org.example.util.Generator.generateTeamCollection;
-import static org.example.util.Generator.generateTournamentCollection;
 
+/**
+ * Главный класс.
+ */
 public class Main {
     public static void main(String[] args) {
         // 2 и 3 задания
@@ -26,32 +25,32 @@ public class Main {
 
     /**
      * В данном методе происходит вызов необходимых функций и расчет затраченного времени.
+     *
+     * @param num количество элементов, которое необходимо сгенерировать.
      */
     private static void execute(int num) {
         System.out.printf("%n------------------Запуск для num = %d------------------%n", num);
         // 2 задание
         ArrayList<Match> matchArrayList = generateMatchCollection(num);
-        ArrayList<Tournament> tournamentArrayList = generateTournamentCollection(num);
-        ArrayList<Team> teamArrayList = generateTeamCollection(num);
 
         // 3 и 4 задания
         long start = System.currentTimeMillis();
-        for (int i = 0; i < 12;++ i) {
-            countByLoop(matchArrayList, tournamentArrayList, teamArrayList);
+        for (int i = 0; i < 12; ++i) {
+            countByLoop(matchArrayList);
         }
         long elapsedTime = System.currentTimeMillis() - start;
         System.out.printf("Итеративное выполнение с num = %d. Время: %f с.%n", num, elapsedTime / 1000F / 12);
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 12;++ i) {
-            countByDefaultCollector(matchArrayList, tournamentArrayList, teamArrayList);
+        for (int i = 0; i < 12; ++i) {
+            countByDefaultCollector(matchArrayList);
         }
         elapsedTime = System.currentTimeMillis() - start;
         System.out.printf("Выполнение со встроенным коллектором с num = %d. Время: %f с.%n", num, elapsedTime / 1000F / 12);
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 12;++ i) {
-            countByCustomCollector(matchArrayList, tournamentArrayList, teamArrayList);
+        for (int i = 0; i < 12; ++i) {
+            countByCustomCollector(matchArrayList);
         }
         elapsedTime = System.currentTimeMillis() - start;
         System.out.printf("Выполнение с собственным коллектором с num = %d. Время: %f с.%n", num, elapsedTime / 1000F / 12);
