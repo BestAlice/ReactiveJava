@@ -1,4 +1,4 @@
-package org.example.task;
+package org.example.task.forkjoinpool;
 
 import org.example.entity.Match;
 import org.example.entity.Team;
@@ -11,18 +11,39 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
- * В данном классе вызываются методы для расчета статистических функций с использованием встроенного коллектора.
+ * В данном классе вызываются методы для расчета статистических функций с использованием собственного коллектора.
  */
-public class CountByDefaultCollector {
+public class CustomForkJoinPool extends RecursiveTask<Integer> {
     /**
      * Объект класса {@link Logger}, используемый для логирования.
      */
-    private static final Logger LOGGER = Logger.getLogger(CountByDefaultCollector.class.getName());
+    private final Logger LOGGER = Logger.getLogger(CustomForkJoinPool.class.getName());
+
+    private final ArrayList<Match> matchArrayList;
+
+    private final int delay;
+
+    private final int members1;
+
+    private final int members2;
+
+    private final int score1;
+
+    private final int score2;
+
+    private final int length;
+
+    private final LocalDateTime localDateTime;
+
+    private final MatchType matchType;
 
     /**
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
@@ -32,30 +53,38 @@ public class CountByDefaultCollector {
      *                       характеристики.
      * @param delay          количество секунд, на которое нужно установить задержку.
      */
-    public static void countByDefaultCollector(ArrayList<Match> matchArrayList, int delay) {
-        int members1 = 2, members2 = 3;
-        int score1 = 5, score2 = 10;
-        int length = 7;
-        LocalDate date = LocalDate.ofEpochDay(378);
-        LocalDateTime localDateTime = LocalDateTime.of(date, LocalTime.ofSecondOfDay(15 * 20 * 10));
-        MatchType matchType = MatchType.DEATHMATCH;
+    public CustomForkJoinPool(ArrayList<Match> matchArrayList, int delay) {
+        this.matchArrayList = matchArrayList;
+        this.delay = delay;
+        this.members1 = 2;
+        this.members2 = 3;
+        this.score1 = 5;
+        this.score2 = 10;
+        this.length = 7;
+        this.localDateTime = LocalDateTime.of(LocalDate.ofEpochDay(378), LocalTime.ofSecondOfDay(15 * 20 * 10));
+        this.matchType = MatchType.DEATHMATCH;
+    }
 
-        System.out.printf("""
-                
-                
-                ----------------------CountByDefaultCollector----------------------
-                
-                countMatchesWithSpecifiedTeamsMembersCount=%d,
-                countMatchesWithSpecifiedTeamsScores=%d,
-                countMatchesWithSpecifiedStartDateAndTournamentNameLength=%d,
-                countMatchesWithSpecifiedType=%d
-                
-                """.formatted(
-                countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay),
-                countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2),
-                countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length),
-                countMatchesWithSpecifiedType(matchArrayList, matchType)
-        ));
+    @Override
+    protected Integer compute() {
+        if (matchArrayList.size() < 536) {
+            return countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay) +
+                    countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2) +
+                    countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length) +
+                    countMatchesWithSpecifiedType(matchArrayList, matchType);
+        }
+        int midIndex = ((matchArrayList.size() / 2) - (((matchArrayList.size() % 2) > 0) ? 0 : 1));
+
+
+        List<List<Match>> lists = new ArrayList<>(matchArrayList.parallelStream()
+                        .collect(Collectors.partitioningBy(s -> matchArrayList.indexOf(s) > midIndex))
+                        .values());
+
+        CustomForkJoinPool firstHalfArrayValueSumCounter = new CustomForkJoinPool(new ArrayList<>(lists.get(0)), delay);
+        CustomForkJoinPool secondHalfArrayValueSumCounter = new CustomForkJoinPool(new ArrayList<>(lists.get(1)), delay);
+        firstHalfArrayValueSumCounter.fork();
+        secondHalfArrayValueSumCounter.fork();
+        return firstHalfArrayValueSumCounter.join() + secondHalfArrayValueSumCounter.join();
     }
 
     /**
@@ -68,19 +97,24 @@ public class CountByDefaultCollector {
      *                       данное значение.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private static long countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
-                                                                   int members2, int delay) {
+    private int countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
+                                                           int members2, int delay) {
         try {
             TimeUnit.SECONDS.sleep(delay);
             LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
         } catch (InterruptedException ex) {
             LOGGER.log(Level.WARNING, "Не удалось установить задержку!");
         }
-        return matchArrayList.stream().filter(match -> {
+
+        int count = 0;
+        for (Match match : matchArrayList) {
             Team team1 = match.getTeam1();
             Team team2 = match.getTeam2();
-            return team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2;
-        }).toList().size();
+            if (team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -91,10 +125,14 @@ public class CountByDefaultCollector {
      * @param score2         счет второй команды. У команды 2 должно быть количество очков, равное данному значению.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private static int countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
-
-        return matchArrayList.stream().filter(match -> match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2)
-                .toList().size();
+    private int countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
+        int count = 0;
+        for (Match match : matchArrayList) {
+            if (match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -106,13 +144,17 @@ public class CountByDefaultCollector {
      * @param length         длина названия турнира. У турнира длина названия должна быть больше данного значения.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private static int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull ArrayList<Match> matchArrayList,
-                                                                                 LocalDateTime localDateTime, int length) {
-        return matchArrayList.stream().filter(match -> {
+    private int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull ArrayList<Match> matchArrayList,
+                                                                          LocalDateTime localDateTime, int length) {
+        int count = 0;
+        for (Match match : matchArrayList) {
             LocalDateTime startTime = match.getStartDateTime();
             Tournament tournament = match.getTournament();
-            return startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length;
-        }).toList().size();
+            if (startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length) {
+                count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -123,8 +165,13 @@ public class CountByDefaultCollector {
      * @return Количество матчей, удовлетворяющих условию.
      */
     @Contract(pure = true)
-    private static int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
-        return matchArrayList.stream().filter(match -> match.getMatchType() != null && match.getMatchType() == matchType)
-                .toList().size();
+    private int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
+        int count = 0;
+        for (Match match : matchArrayList) {
+            if (match.getMatchType() != null && match.getMatchType() == matchType) {
+                count++;
+            }
+        }
+        return count;
     }
 }

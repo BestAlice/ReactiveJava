@@ -1,6 +1,5 @@
-package org.example.task;
+package org.example.task.linear;
 
-import org.example.collector.ReactiveCollector;
 import org.example.entity.Match;
 import org.example.entity.Team;
 import org.example.entity.Tournament;
@@ -17,13 +16,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * В данном классе вызываются методы для расчета статистических функций с использованием собственного коллектора.
+ * В данном классе вызываются методы для расчета статистических функций с использованием встроенного коллектора.
  */
-public class CountByCustomCollector {
+public class CountByDefaultCollectorLinear {
     /**
      * Объект класса {@link Logger}, используемый для логирования.
      */
-    private static final Logger LOGGER = Logger.getLogger(CountByCustomCollector.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CountByDefaultCollectorLinear.class.getName());
 
     /**
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
@@ -33,7 +32,7 @@ public class CountByCustomCollector {
      *                       характеристики.
      * @param delay          количество секунд, на которое нужно установить задержку.
      */
-    public static void countByCustomCollector(ArrayList<Match> matchArrayList, int delay) {
+    public static void countByDefaultCollectorLinear(ArrayList<Match> matchArrayList, int delay) {
         int members1 = 2, members2 = 3;
         int score1 = 5, score2 = 10;
         int length = 7;
@@ -44,7 +43,7 @@ public class CountByCustomCollector {
         System.out.printf("""
                 
                 
-                ----------------------CountByCustomCollector----------------------
+                ----------------------CountByDefaultCollector----------------------
                 
                 countMatchesWithSpecifiedTeamsMembersCount=%d,
                 countMatchesWithSpecifiedTeamsScores=%d,
@@ -81,7 +80,7 @@ public class CountByCustomCollector {
             Team team1 = match.getTeam1();
             Team team2 = match.getTeam2();
             return team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2;
-        }).collect(new ReactiveCollector()).size();
+        }).toList().size();
     }
 
     /**
@@ -95,7 +94,7 @@ public class CountByCustomCollector {
     private static int countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
 
         return matchArrayList.stream().filter(match -> match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2)
-                .collect(new ReactiveCollector()).size();
+                .toList().size();
     }
 
     /**
@@ -113,7 +112,7 @@ public class CountByCustomCollector {
             LocalDateTime startTime = match.getStartDateTime();
             Tournament tournament = match.getTournament();
             return startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length;
-        }).collect(new ReactiveCollector()).size();
+        }).toList().size();
     }
 
     /**
@@ -126,6 +125,6 @@ public class CountByCustomCollector {
     @Contract(pure = true)
     private static int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
         return matchArrayList.stream().filter(match -> match.getMatchType() != null && match.getMatchType() == matchType)
-                .collect(new ReactiveCollector()).size();
+                .toList().size();
     }
 }
