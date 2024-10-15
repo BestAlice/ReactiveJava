@@ -20,6 +20,9 @@ public class CountByCustomCollector {
     /**
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
      * каждого из методов.
+     *
+     * @param matchArrayList список объектов класса {@link Match}, для которых необходимо рассчитать статистические
+     *                       характеристики.
      */
     public static void countByCustomCollector(ArrayList<Match> matchArrayList) {
         int members1 = 2, members2 = 3;
