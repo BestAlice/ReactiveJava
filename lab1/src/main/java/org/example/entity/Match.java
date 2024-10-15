@@ -3,7 +3,6 @@ package org.example.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.example.enums.MatchType;
-import org.example.interfaces.IReactive;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @AllArgsConstructor
-public class Match implements IReactive {
+public class Match {
     /**
      * Объект класса {@link Team}, содержащий информацию о первой команде.
      */

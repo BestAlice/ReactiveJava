@@ -20,13 +20,10 @@ public class CountByDefaultCollector {
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
      * каждого из методов.
      */
-    public static void countByDefaultCollector(ArrayList<Match> matchArrayList, ArrayList<Tournament> tournamentArrayList,
-                                               ArrayList<Team> teamArrayList) {
+    public static void countByDefaultCollector(ArrayList<Match> matchArrayList) {
         int members1 = 2, members2 = 3;
         int score1 = 5, score2 = 10;
         int length = 7;
-        int members = 4;
-        int wins = 25;
         LocalDate date = LocalDate.ofEpochDay(378);
         LocalDateTime localDateTime = LocalDateTime.of(date, LocalTime.ofSecondOfDay(15 * 20 * 10));
         MatchType matchType = MatchType.DEATHMATCH;
@@ -39,23 +36,13 @@ public class CountByDefaultCollector {
                 countMatchesWithSpecifiedTeamsMembersCount=%d,
                 countMatchesWithSpecifiedTeamsScores=%d,
                 countMatchesWithSpecifiedStartDateAndTournamentNameLength=%d,
-                countMatchesWithSpecifiedType=%d,
-                countTournamentsWithSpecifiedNameLength=%d,
-                countTournamentsWithSpecifiedDate=%d,
-                countTeamsWithSomeMembersAndSomeWins=%d,
-                countTeamsWinsWithSomeMembersAndWins=%d,
-                countTeamsWithSpecifiedTeamNameLength=%d
+                countMatchesWithSpecifiedType=%d
                 
                 """.formatted(
                 countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2),
                 countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2),
                 countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length),
-                countMatchesWithSpecifiedType(matchArrayList, matchType),
-                countTournamentsWithSpecifiedNameLength(tournamentArrayList, length),
-                countTournamentsWithSpecifiedDate(tournamentArrayList, date),
-                countTeamsWithSomeMembersAndSomeWins(teamArrayList, members),
-                countTeamsWinsWithSomeMembersAndWins(teamArrayList, members, wins),
-                countTeamsWithSpecifiedTeamNameLength(teamArrayList, length)
+                countMatchesWithSpecifiedType(matchArrayList, matchType)
         ));
     }
 
@@ -121,66 +108,5 @@ public class CountByDefaultCollector {
     private static int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
         return matchArrayList.stream().filter(match -> match.getMatchType() != null && match.getMatchType() == matchType)
                 .toList().size();
-    }
-
-    /**
-     * Метод рассчитывает количество турниров, у которых длина названия больше переданного.
-     *
-     * @param tournamentArrayList список турниров, среди которых будет производиться расчет статистических данных.
-     * @param length              длина названия турнира. У турнира длина названия должна быть больше данного значения.
-     * @return Количество турниров, удовлетворяющих условию.
-     */
-    private static int countTournamentsWithSpecifiedNameLength(@NotNull ArrayList<Tournament> tournamentArrayList, int length) {
-        return tournamentArrayList.stream().filter(tournament -> tournament.name() != null && tournament.name().length() > length)
-                .toList().size();
-    }
-
-    /**
-     * Метод рассчитывает количество турниров, которые начинаются раньше переданной даты.
-     *
-     * @param tournamentArrayList список турниров, среди которых будет производиться расчет статистических данных.
-     * @param date                дата, после которой должен начаться турнир.
-     * @return Количество турниров, удовлетворяющих условию.
-     */
-    private static int countTournamentsWithSpecifiedDate(@NotNull ArrayList<Tournament> tournamentArrayList, LocalDate date) {
-        return tournamentArrayList.stream().filter(tournament -> tournament.startDate() != null && tournament.startDate().isBefore(date))
-                .toList().size();
-    }
-
-    /**
-     * Метод рассчитывает количество команд, у которых количество участников равно переданному значению.
-     *
-     * @param teamArrayList список команд, среди которых будет производиться расчет статистических данных.
-     * @param members       количество участников, которое должно быть в команде.
-     * @return Количество команд, удовлетворяющих условию.
-     */
-    private static int countTeamsWithSomeMembersAndSomeWins(@NotNull ArrayList<Team> teamArrayList, int members) {
-        return teamArrayList.stream().filter(team -> team.getMembers().size() == members).toList().size();
-    }
-
-    /**
-     * Метод рассчитывает сумму количества побед команд, у которых количество участников равно переданному значению и
-     * побед больше переданного значения.
-     *
-     * @param teamArrayList список команд, среди которых будет производиться расчет статистических данных.
-     * @param members       количество участников, которое должно быть в команде.
-     * @param wins          количество побед. Количество побед команды должно быть больше данного значения.
-     * @return Сумма количества побед команд, удовлетворяющих условию.
-     */
-    private static int countTeamsWinsWithSomeMembersAndWins(@NotNull ArrayList<Team> teamArrayList, int members, int wins) {
-        return teamArrayList.stream().filter(team -> team.getMembers().size() == members && team.getWins() > wins)
-                .mapToInt(Team::getWins).sum();
-    }
-
-    /**
-     * Метод рассчитывает количество команд, у которых длина названия больше переданного значения.
-     *
-     * @param teamArrayList список команд, среди которых будет производиться расчет статистических данных.
-     * @param length        длина названия. У команды длина названия должна быть больше данного значения.
-     * @return Количество команд, удовлетворяющих условию.
-     */
-    private static int countTeamsWithSpecifiedTeamNameLength(@NotNull ArrayList<Team> teamArrayList, int length) {
-        return teamArrayList.stream().filter(team -> team.getName() != null && team.getName().length() > length).toList()
-                .size();
     }
 }

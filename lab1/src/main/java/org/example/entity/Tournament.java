@@ -1,6 +1,5 @@
 package org.example.entity;
 
-import org.example.interfaces.IReactive;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +13,7 @@ import java.time.LocalDate;
  * @param startDate дата начала турнира.
  * @param endDate   дата окончания турнира.
  */
-public record Tournament(String name, String place, LocalDate startDate, LocalDate endDate) implements IReactive {
+public record Tournament(String name, String place, LocalDate startDate, LocalDate endDate) {
     /**
      * Метод позволяет представить объекта класса {@link Tournament} в виде строки.
      *

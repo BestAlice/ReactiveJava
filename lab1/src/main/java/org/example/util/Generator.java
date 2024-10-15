@@ -48,26 +48,6 @@ public class Generator {
     }
 
     /**
-     * Данный метод позволяет сгенерировать необходимое количество объектов класса {@link Tournament}.
-     *
-     * @param count количество объектов, которое необходимо сгенерировать.
-     * @return Список объектов класса {@link Tournament}, количество которых равно запрашиваемому.
-     */
-    public static @NotNull ArrayList<Tournament> generateTournamentCollection(int count) {
-        return (ArrayList<Tournament>) generateCollection(count, o -> generateTournament());
-    }
-
-    /**
-     * Данный метод позволяет сгенерировать необходимое количество объектов класса {@link Team}.
-     *
-     * @param count количество объектов, которое необходимо сгенерировать.
-     * @return Список объектов класса {@link Team}, количество которых равно запрашиваемому.
-     */
-    public static @NotNull ArrayList<Team> generateTeamCollection(int count) {
-        return (ArrayList<Team>) generateCollection(count, o -> generateTeam());
-    }
-
-    /**
      * Данный метод позволяет вернуть коллекцию объектов, состоящую из необходимого количества объектов.
      *
      * @param count       количество объектов, которое необходимо сгенерировать.

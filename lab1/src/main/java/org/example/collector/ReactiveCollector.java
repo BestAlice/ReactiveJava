@@ -1,6 +1,6 @@
 package org.example.collector;
 
-import org.example.interfaces.IReactive;
+import org.example.entity.Match;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +12,16 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 /**
- * Класс является собственной реализацией коллектора для взаимодействия с экземплярами интерфейса {@link IReactive}.
+ * Класс является собственной реализацией коллектора для взаимодействия с объектами класса {@link Math}.
  */
-public class ReactiveCollector implements Collector<IReactive, List<IReactive>, List<IReactive>> {
+public class ReactiveCollector implements Collector<Match, List<Match>, List<Match>> {
     /**
      * Создает новый изменяемый контейнер.
      *
      * @return Функция, которая возвращает новый изменяемый контейнер.
      */
     @Override
-    public Supplier<List<IReactive>> supplier() {
+    public Supplier<List<Match>> supplier() {
         return ArrayList::new;
     }
 
@@ -31,7 +31,7 @@ public class ReactiveCollector implements Collector<IReactive, List<IReactive>, 
      * @return Функция, добавляющая новый элемент в коллектор.
      */
     @Override
-    public BiConsumer<List<IReactive>, IReactive> accumulator() {
+    public BiConsumer<List<Match>, Match> accumulator() {
         return List::add;
     }
 
@@ -41,7 +41,7 @@ public class ReactiveCollector implements Collector<IReactive, List<IReactive>, 
      * @return Функция, которая позволяет соединять две коллекции в одну.
      */
     @Override
-    public BinaryOperator<List<IReactive>> combiner() {
+    public BinaryOperator<List<Match>> combiner() {
         return (list1, list2) -> {
             list1.addAll(list2);
             return list1;
@@ -54,7 +54,7 @@ public class ReactiveCollector implements Collector<IReactive, List<IReactive>, 
      * @return Функция, которая преобразует накопленные значения в окончательный вид.
      */
     @Override
-    public Function<List<IReactive>, List<IReactive>> finisher() {
+    public Function<List<Match>, List<Match>> finisher() {
         return Function.identity();
     }
 
