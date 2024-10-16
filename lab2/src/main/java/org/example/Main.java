@@ -1,7 +1,7 @@
 package org.example;
 
 import org.example.entity.Match;
-import org.example.task.forkjoinpool.CustomForkJoinPool;
+import org.example.task.forkjoinpool.CustomForkJoinPoolTask;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -15,17 +15,19 @@ import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.annotations.Warmup;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
 import static org.example.task.CountByLoop.countByLoop;
+import static org.example.task.FindCommonValue.getCommonCount;
 import static org.example.task.parallel.CountByCustomCollectorParallel.countByCustomCollectorParallel;
 import static org.example.task.parallel.CountByDefaultCollectorParallel.countByDefaultCollectorParallel;
 import static org.example.util.Generator.generateMatchCollection;
 
 /**
- * Р“Р»Р°РІРЅС‹Р№ РєР»Р°СЃСЃ.
+ * Главный класс.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.SECONDS)
@@ -36,7 +38,7 @@ import static org.example.util.Generator.generateMatchCollection;
 @State(Scope.Thread)
 public class Main {
     /**
-     * РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРµРєСѓРЅРґ РґР»СЏ Р·Р°РґРµСЂР¶РєРё.
+     * Количество миллисекунд для задержки.
      **/
     private int delay;
 
@@ -48,7 +50,7 @@ public class Main {
 
     @Setup
     public void setupMethod() {
-        delay = 0;
+        delay = 5;
         matchArrayList = generateMatchCollection(5000);
     }
 
@@ -69,7 +71,7 @@ public class Main {
 
     @Benchmark
     public void executeCustomForkJoinPool() {
-        CustomForkJoinPool counter = new CustomForkJoinPool(matchArrayList, delay);
+        CustomForkJoinPoolTask counter = new CustomForkJoinPoolTask(matchArrayList, delay);
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         forkJoinPool.invoke(counter);
     }

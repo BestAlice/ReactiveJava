@@ -72,7 +72,7 @@ public class CountByCustomCollectorParallel {
     private static long countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
                                                                    int members2, int delay) {
         try {
-            TimeUnit.SECONDS.sleep(delay);
+            TimeUnit.MILLISECONDS.sleep(delay);
             LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
         } catch (InterruptedException ex) {
             LOGGER.log(Level.WARNING, "Не удалось установить задержку!");

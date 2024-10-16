@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 /**
  * В данном классе вызываются методы для расчета статистических функций с использованием собственного коллектора.
  */
-public class CustomForkJoinPool extends RecursiveTask<Integer> {
+public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
     /**
      * Объект класса {@link Logger}, используемый для логирования.
      */
-    private final Logger LOGGER = Logger.getLogger(CustomForkJoinPool.class.getName());
+    private final Logger LOGGER = Logger.getLogger(CustomForkJoinPoolTask.class.getName());
 
-    private final ArrayList<Match> matchArrayList;
+    private final List<Match> matchArrayList;
 
     private final int delay;
 
@@ -53,7 +53,7 @@ public class CustomForkJoinPool extends RecursiveTask<Integer> {
      *                       характеристики.
      * @param delay          количество секунд, на которое нужно установить задержку.
      */
-    public CustomForkJoinPool(ArrayList<Match> matchArrayList, int delay) {
+    public CustomForkJoinPoolTask(List<Match> matchArrayList, int delay) {
         this.matchArrayList = matchArrayList;
         this.delay = delay;
         this.members1 = 2;
@@ -75,13 +75,8 @@ public class CustomForkJoinPool extends RecursiveTask<Integer> {
         }
         int midIndex = ((matchArrayList.size() / 2) - (((matchArrayList.size() % 2) > 0) ? 0 : 1));
 
-
-        List<List<Match>> lists = new ArrayList<>(matchArrayList.parallelStream()
-                        .collect(Collectors.partitioningBy(s -> matchArrayList.indexOf(s) > midIndex))
-                        .values());
-
-        CustomForkJoinPool firstHalfArrayValueSumCounter = new CustomForkJoinPool(new ArrayList<>(lists.get(0)), delay);
-        CustomForkJoinPool secondHalfArrayValueSumCounter = new CustomForkJoinPool(new ArrayList<>(lists.get(1)), delay);
+        CustomForkJoinPoolTask firstHalfArrayValueSumCounter = new CustomForkJoinPoolTask(matchArrayList.subList(0, midIndex), delay);
+        CustomForkJoinPoolTask secondHalfArrayValueSumCounter = new CustomForkJoinPoolTask(matchArrayList.subList(midIndex, matchArrayList.size()), delay);
         firstHalfArrayValueSumCounter.fork();
         secondHalfArrayValueSumCounter.fork();
         return firstHalfArrayValueSumCounter.join() + secondHalfArrayValueSumCounter.join();
@@ -97,7 +92,7 @@ public class CustomForkJoinPool extends RecursiveTask<Integer> {
      *                       данное значение.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private int countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
+    private int countMatchesWithSpecifiedTeamsMembersCount(@NotNull List<Match> matchArrayList, int members1,
                                                            int members2, int delay) {
         try {
             TimeUnit.SECONDS.sleep(delay);
@@ -125,7 +120,7 @@ public class CustomForkJoinPool extends RecursiveTask<Integer> {
      * @param score2         счет второй команды. У команды 2 должно быть количество очков, равное данному значению.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private int countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
+    private int countMatchesWithSpecifiedTeamsScores(@NotNull List<Match> matchArrayList, int score1, int score2) {
         int count = 0;
         for (Match match : matchArrayList) {
             if (match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2) {
@@ -144,7 +139,7 @@ public class CustomForkJoinPool extends RecursiveTask<Integer> {
      * @param length         длина названия турнира. У турнира длина названия должна быть больше данного значения.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull ArrayList<Match> matchArrayList,
+    private int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull List<Match> matchArrayList,
                                                                           LocalDateTime localDateTime, int length) {
         int count = 0;
         for (Match match : matchArrayList) {
@@ -165,7 +160,7 @@ public class CustomForkJoinPool extends RecursiveTask<Integer> {
      * @return Количество матчей, удовлетворяющих условию.
      */
     @Contract(pure = true)
-    private int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
+    private int countMatchesWithSpecifiedType(@NotNull List<Match> matchArrayList, MatchType matchType) {
         int count = 0;
         for (Match match : matchArrayList) {
             if (match.getMatchType() != null && match.getMatchType() == matchType) {

@@ -18,7 +18,7 @@ public class FindCommonValue {
     /**
      * Переменная, обозначающая погрешность между полученными значениями времени параллельного и последовательного стрима.
      */
-    private static final float eps = 0.0000000001f;
+    private static final float eps = 0.0000002f;
 
     /**
      * Данный метод позволяет определить примерное количество элементов, при котором параллельный и последовательный
@@ -36,7 +36,7 @@ public class FindCommonValue {
         int defaultCommonVal = -1;
         int customCommonVal = -1;
 
-        for (int i = 2; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps && Math.abs(timeCustomLinear - timeCustomParallel) > eps; i++) {
+        for (int i = 100; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps && Math.abs(timeCustomLinear - timeCustomParallel) > eps; i*=5) {
             ArrayList<Match> matchArrayList = generateMatchCollection(i);
 
             long start, elapsedTime;
@@ -73,6 +73,7 @@ public class FindCommonValue {
                 timeCustomLinear = elapsedTime / 1000F / 12;
                 customCommonVal = i;
             }
+            System.out.println(defaultCommonVal + " " + customCommonVal);
         }
         System.out.printf("""
                 Для стандартного коллектора:
