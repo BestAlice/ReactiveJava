@@ -1,7 +1,11 @@
 package org.example;
 
 import org.example.entity.Match;
+<<<<<<< HEAD
+import org.example.task.CustomForkJoinPoolTask;
+=======
 import org.example.task.forkjoinpool.CustomForkJoinPoolTask;
+>>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -20,10 +24,14 @@ import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
+import static org.example.task.CountByDefaultCollectorParallel.countByDefaultCollectorParallel;
 import static org.example.task.CountByLoop.countByLoop;
+<<<<<<< HEAD
+=======
 import static org.example.task.FindCommonValue.getCommonCount;
 import static org.example.task.parallel.CountByCustomCollectorParallel.countByCustomCollectorParallel;
 import static org.example.task.parallel.CountByDefaultCollectorParallel.countByDefaultCollectorParallel;
+>>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468
 import static org.example.util.Generator.generateMatchCollection;
 
 /**
@@ -38,8 +46,13 @@ import static org.example.util.Generator.generateMatchCollection;
 @State(Scope.Thread)
 public class Main {
     /**
+<<<<<<< HEAD
+     * ÐšÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ ÑÐµÐºÑƒÐ½Ð´ Ð´Ð»Ñ Ð·Ð°Ð´ÐµÑ€Ð¶ÐºÐ¸.
+     */
+=======
      * Êîëè÷åñòâî ìèëëèñåêóíä äëÿ çàäåðæêè.
      **/
+>>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468
     private int delay;
 
     private ArrayList<Match> matchArrayList;
@@ -62,11 +75,6 @@ public class Main {
     @Benchmark
     public void executeDefaultCollector() {
         countByDefaultCollectorParallel(matchArrayList, delay);
-    }
-
-    @Benchmark
-    public void executeCustomCollector() {
-        countByCustomCollectorParallel(matchArrayList, delay);
     }
 
     @Benchmark

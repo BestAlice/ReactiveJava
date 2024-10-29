@@ -1,8 +1,7 @@
-package org.example.task.forkjoinpool;
+package org.example.task;
 
 import org.example.entity.Match;
 import org.example.entity.Team;
-import org.example.entity.Tournament;
 import org.example.enums.MatchType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -10,13 +9,11 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * В данном классе вызываются методы для расчета статистических функций с использованием собственного коллектора.
@@ -39,8 +36,6 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
 
     private final int score2;
 
-    private final int length;
-
     private final LocalDateTime localDateTime;
 
     private final MatchType matchType;
@@ -60,7 +55,6 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
         this.members2 = 3;
         this.score1 = 5;
         this.score2 = 10;
-        this.length = 7;
         this.localDateTime = LocalDateTime.of(LocalDate.ofEpochDay(378), LocalTime.ofSecondOfDay(15 * 20 * 10));
         this.matchType = MatchType.DEATHMATCH;
     }
@@ -70,7 +64,7 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
         if (matchArrayList.size() < 536) {
             return countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay) +
                     countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2) +
-                    countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length) +
+                    countMatchesWithSpecifiedStartDate(matchArrayList, localDateTime) +
                     countMatchesWithSpecifiedType(matchArrayList, matchType);
         }
         int midIndex = ((matchArrayList.size() / 2) - (((matchArrayList.size() % 2) > 0) ? 0 : 1));
@@ -131,21 +125,23 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
     }
 
     /**
-     * Метод рассчитывает количество матчей, которые начинаются после определенной даты, а также у которых длина
-     * названия турнира больше переданного значения.
+     * Метод рассчитывает количество матчей, которые начинаются после определенной даты.
      *
      * @param matchArrayList список матчей, среди которых будет производиться расчет статистических данных.
      * @param localDateTime  дата, после которой должен начаться матч.
-     * @param length         длина названия турнира. У турнира длина названия должна быть больше данного значения.
      * @return Количество матчей, удовлетворяющих условию.
      */
+<<<<<<< HEAD:lab2/src/main/java/org/example/task/CustomForkJoinPoolTask.java
+    private int countMatchesWithSpecifiedStartDate(@NotNull List<Match> matchArrayList,
+                                                   LocalDateTime localDateTime) {
+=======
     private int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull List<Match> matchArrayList,
                                                                           LocalDateTime localDateTime, int length) {
+>>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468:lab2/src/main/java/org/example/task/forkjoinpool/CustomForkJoinPoolTask.java
         int count = 0;
         for (Match match : matchArrayList) {
             LocalDateTime startTime = match.getStartDateTime();
-            Tournament tournament = match.getTournament();
-            if (startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length) {
+            if (startTime != null && startTime.isAfter(localDateTime)) {
                 count++;
             }
         }

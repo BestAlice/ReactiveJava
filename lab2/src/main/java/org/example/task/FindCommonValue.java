@@ -4,10 +4,8 @@ import org.example.entity.Match;
 
 import java.util.ArrayList;
 
-import static org.example.task.linear.CountByCustomCollectorLinear.countByCustomCollectorLinear;
-import static org.example.task.linear.CountByDefaultCollectorLinear.countByDefaultCollectorLinear;
-import static org.example.task.parallel.CountByCustomCollectorParallel.countByCustomCollectorParallel;
-import static org.example.task.parallel.CountByDefaultCollectorParallel.countByDefaultCollectorParallel;
+import static org.example.task.CountByDefaultCollectorLinear.countByDefaultCollectorLinear;
+import static org.example.task.CountByDefaultCollectorParallel.countByDefaultCollectorParallel;
 import static org.example.util.Generator.generateMatchCollection;
 
 /**
@@ -28,15 +26,16 @@ public class FindCommonValue {
      */
     public static void getCommonCount(int delay) {
         float timeDefaultLinear = 1.0f;
-        float timeCustomLinear = 1.0f;
 
         float timeDefaultParallel = 0.0f;
-        float timeCustomParallel = 0.0f;
 
         int defaultCommonVal = -1;
-        int customCommonVal = -1;
 
+<<<<<<< HEAD
+        for (int i = 100; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps; i *= 5) {
+=======
         for (int i = 100; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps && Math.abs(timeCustomLinear - timeCustomParallel) > eps; i*=5) {
+>>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468
             ArrayList<Match> matchArrayList = generateMatchCollection(i);
 
             long start, elapsedTime;
@@ -56,6 +55,8 @@ public class FindCommonValue {
                 timeDefaultLinear = elapsedTime / 1000F / 12;
                 defaultCommonVal = i;
             }
+<<<<<<< HEAD
+=======
 
             if (Math.abs(timeCustomLinear - timeCustomParallel) > eps) {
                 start = System.currentTimeMillis();
@@ -74,6 +75,7 @@ public class FindCommonValue {
                 customCommonVal = i;
             }
             System.out.println(defaultCommonVal + " " + customCommonVal);
+>>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468
         }
         System.out.printf("""
                 Для стандартного коллектора:
@@ -82,13 +84,5 @@ public class FindCommonValue {
                 Общее количество элементов: %d.
                 Задержка: %d.
                 %n""", timeDefaultParallel, timeDefaultLinear, defaultCommonVal, delay);
-
-        System.out.printf("""
-                Для собственного коллектора:
-                Время параллельного исполнения: %f секунд.
-                Время линейного исполнения: %f секунд.
-                Общее количество элементов: %d.
-                Задержка: %d.
-                %n""", timeCustomParallel, timeCustomLinear, customCommonVal, delay);
     }
 }
