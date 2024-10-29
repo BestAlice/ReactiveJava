@@ -31,11 +31,7 @@ public class FindCommonValue {
 
         int defaultCommonVal = -1;
 
-<<<<<<< HEAD
-        for (int i = 100; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps; i *= 5) {
-=======
-        for (int i = 100; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps && Math.abs(timeCustomLinear - timeCustomParallel) > eps; i*=5) {
->>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468
+        for (int i = 500; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps; i = i < 1562500 ? i * 500 : i + 500) {
             ArrayList<Match> matchArrayList = generateMatchCollection(i);
 
             long start, elapsedTime;
@@ -54,28 +50,9 @@ public class FindCommonValue {
                 elapsedTime = System.currentTimeMillis() - start;
                 timeDefaultLinear = elapsedTime / 1000F / 12;
                 defaultCommonVal = i;
-            }
-<<<<<<< HEAD
-=======
 
-            if (Math.abs(timeCustomLinear - timeCustomParallel) > eps) {
-                start = System.currentTimeMillis();
-                for (int j = 0; j < 12; ++j) {
-                    countByCustomCollectorParallel(matchArrayList, delay);
-                }
-                elapsedTime = System.currentTimeMillis() - start;
-                timeCustomParallel = elapsedTime / 1000F / 12;
-
-                start = System.currentTimeMillis();
-                for (int j = 0; j < 12; ++j) {
-                    countByCustomCollectorLinear(matchArrayList, delay);
-                }
-                elapsedTime = System.currentTimeMillis() - start;
-                timeCustomLinear = elapsedTime / 1000F / 12;
-                customCommonVal = i;
+                System.out.println(i + " " + timeDefaultParallel + " " + timeDefaultLinear);
             }
-            System.out.println(defaultCommonVal + " " + customCommonVal);
->>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468
         }
         System.out.printf("""
                 Для стандартного коллектора:
