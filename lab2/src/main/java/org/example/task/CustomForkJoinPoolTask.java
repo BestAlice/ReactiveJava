@@ -131,13 +131,8 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
      * @param localDateTime  дата, после которой должен начаться матч.
      * @return Количество матчей, удовлетворяющих условию.
      */
-<<<<<<< HEAD:lab2/src/main/java/org/example/task/CustomForkJoinPoolTask.java
     private int countMatchesWithSpecifiedStartDate(@NotNull List<Match> matchArrayList,
                                                    LocalDateTime localDateTime) {
-=======
-    private int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull List<Match> matchArrayList,
-                                                                          LocalDateTime localDateTime, int length) {
->>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468:lab2/src/main/java/org/example/task/forkjoinpool/CustomForkJoinPoolTask.java
         int count = 0;
         for (Match match : matchArrayList) {
             LocalDateTime startTime = match.getStartDateTime();
