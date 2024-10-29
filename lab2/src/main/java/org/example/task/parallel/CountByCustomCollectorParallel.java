@@ -1,7 +1,9 @@
-package org.example.task;
+package org.example.task.parallel;
 
+import org.example.collector.ReactiveCollector;
 import org.example.entity.Match;
 import org.example.entity.Team;
+import org.example.entity.Tournament;
 import org.example.enums.MatchType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -9,36 +11,19 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.concurrent.RecursiveTask;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * В данном классе вызываются методы для расчета статистических функций с использованием собственного коллектора.
+ * В данном классе вызываются методы для параллельного расчета статистических функций с использованием собственного коллектора.
  */
-public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
+public class CountByCustomCollectorParallel {
     /**
      * Объект класса {@link Logger}, используемый для логирования.
      */
-    private final Logger LOGGER = Logger.getLogger(CustomForkJoinPoolTask.class.getName());
-
-    private final List<Match> matchArrayList;
-
-    private final int delay;
-
-    private final int members1;
-
-    private final int members2;
-
-    private final int score1;
-
-    private final int score2;
-
-    private final LocalDateTime localDateTime;
-
-    private final MatchType matchType;
+    private static final Logger LOGGER = Logger.getLogger(CountByCustomCollectorParallel.class.getName());
 
     /**
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
@@ -48,32 +33,30 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
      *                       характеристики.
      * @param delay          количество секунд, на которое нужно установить задержку.
      */
-    public CustomForkJoinPoolTask(List<Match> matchArrayList, int delay) {
-        this.matchArrayList = matchArrayList;
-        this.delay = delay;
-        this.members1 = 2;
-        this.members2 = 3;
-        this.score1 = 5;
-        this.score2 = 10;
-        this.localDateTime = LocalDateTime.of(LocalDate.ofEpochDay(378), LocalTime.ofSecondOfDay(15 * 20 * 10));
-        this.matchType = MatchType.DEATHMATCH;
-    }
+    public static void countByCustomCollectorParallel(ArrayList<Match> matchArrayList, int delay) {
+        int members1 = 2, members2 = 3;
+        int score1 = 5, score2 = 10;
+        int length = 7;
+        LocalDate date = LocalDate.ofEpochDay(378);
+        LocalDateTime localDateTime = LocalDateTime.of(date, LocalTime.ofSecondOfDay(15 * 20 * 10));
+        MatchType matchType = MatchType.DEATHMATCH;
 
-    @Override
-    protected Integer compute() {
-        if (matchArrayList.size() < 536) {
-            return countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay) +
-                    countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2) +
-                    countMatchesWithSpecifiedStartDate(matchArrayList, localDateTime) +
-                    countMatchesWithSpecifiedType(matchArrayList, matchType);
-        }
-        int midIndex = ((matchArrayList.size() / 2) - (((matchArrayList.size() % 2) > 0) ? 0 : 1));
-
-        CustomForkJoinPoolTask firstHalfArrayValueSumCounter = new CustomForkJoinPoolTask(matchArrayList.subList(0, midIndex), delay);
-        CustomForkJoinPoolTask secondHalfArrayValueSumCounter = new CustomForkJoinPoolTask(matchArrayList.subList(midIndex, matchArrayList.size()), delay);
-        firstHalfArrayValueSumCounter.fork();
-        secondHalfArrayValueSumCounter.fork();
-        return firstHalfArrayValueSumCounter.join() + secondHalfArrayValueSumCounter.join();
+        System.out.printf("""
+                
+                
+                ----------------------CountByCustomCollector----------------------
+                
+                countMatchesWithSpecifiedTeamsMembersCount=%d,
+                countMatchesWithSpecifiedTeamsScores=%d,
+                countMatchesWithSpecifiedStartDateAndTournamentNameLength=%d,
+                countMatchesWithSpecifiedType=%d
+                
+                """.formatted(
+                countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay),
+                countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2),
+                countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length),
+                countMatchesWithSpecifiedType(matchArrayList, matchType)
+        ));
     }
 
     /**
@@ -86,24 +69,19 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
      *                       данное значение.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private int countMatchesWithSpecifiedTeamsMembersCount(@NotNull List<Match> matchArrayList, int members1,
-                                                           int members2, int delay) {
+    private static long countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
+                                                                   int members2, int delay) {
         try {
-            TimeUnit.SECONDS.sleep(delay);
+            TimeUnit.MILLISECONDS.sleep(delay);
             LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
         } catch (InterruptedException ex) {
             LOGGER.log(Level.WARNING, "Не удалось установить задержку!");
         }
-
-        int count = 0;
-        for (Match match : matchArrayList) {
+        return matchArrayList.parallelStream().filter(match -> {
             Team team1 = match.getTeam1();
             Team team2 = match.getTeam2();
-            if (team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2) {
-                count++;
-            }
-        }
-        return count;
+            return team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2;
+        }).collect(new ReactiveCollector()).size();
     }
 
     /**
@@ -114,38 +92,28 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
      * @param score2         счет второй команды. У команды 2 должно быть количество очков, равное данному значению.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private int countMatchesWithSpecifiedTeamsScores(@NotNull List<Match> matchArrayList, int score1, int score2) {
-        int count = 0;
-        for (Match match : matchArrayList) {
-            if (match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2) {
-                count++;
-            }
-        }
-        return count;
+    private static int countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
+
+        return matchArrayList.parallelStream().filter(match -> match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2)
+                .collect(new ReactiveCollector()).size();
     }
 
     /**
-     * Метод рассчитывает количество матчей, которые начинаются после определенной даты.
+     * Метод рассчитывает количество матчей, которые начинаются после определенной даты, а также у которых длина
+     * названия турнира больше переданного значения.
      *
      * @param matchArrayList список матчей, среди которых будет производиться расчет статистических данных.
      * @param localDateTime  дата, после которой должен начаться матч.
+     * @param length         длина названия турнира. У турнира длина названия должна быть больше данного значения.
      * @return Количество матчей, удовлетворяющих условию.
      */
-<<<<<<< HEAD:lab2/src/main/java/org/example/task/CustomForkJoinPoolTask.java
-    private int countMatchesWithSpecifiedStartDate(@NotNull List<Match> matchArrayList,
-                                                   LocalDateTime localDateTime) {
-=======
-    private int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull List<Match> matchArrayList,
-                                                                          LocalDateTime localDateTime, int length) {
->>>>>>> c172c38a27aea05f171b4ad238ec12fbc0e50468:lab2/src/main/java/org/example/task/forkjoinpool/CustomForkJoinPoolTask.java
-        int count = 0;
-        for (Match match : matchArrayList) {
+    private static int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull ArrayList<Match> matchArrayList,
+                                                                                 LocalDateTime localDateTime, int length) {
+        return matchArrayList.parallelStream().filter(match -> {
             LocalDateTime startTime = match.getStartDateTime();
-            if (startTime != null && startTime.isAfter(localDateTime)) {
-                count++;
-            }
-        }
-        return count;
+            Tournament tournament = match.getTournament();
+            return startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length;
+        }).collect(new ReactiveCollector()).size();
     }
 
     /**
@@ -156,13 +124,8 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
      * @return Количество матчей, удовлетворяющих условию.
      */
     @Contract(pure = true)
-    private int countMatchesWithSpecifiedType(@NotNull List<Match> matchArrayList, MatchType matchType) {
-        int count = 0;
-        for (Match match : matchArrayList) {
-            if (match.getMatchType() != null && match.getMatchType() == matchType) {
-                count++;
-            }
-        }
-        return count;
+    private static int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
+        return matchArrayList.parallelStream().filter(match -> match.getMatchType() != null && match.getMatchType() == matchType)
+                .collect(new ReactiveCollector()).size();
     }
 }
