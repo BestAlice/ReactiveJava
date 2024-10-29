@@ -1,8 +1,7 @@
-package org.example.task.linear;
+package org.example.task;
 
 import org.example.entity.Match;
 import org.example.entity.Team;
-import org.example.entity.Tournament;
 import org.example.enums.MatchType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -11,18 +10,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
- * В данном классе вызываются методы для расчета статистических функций с использованием встроенного коллектора.
+ * В данном классе вызываются методы для параллельного расчета статистических функций с использованием встроенного коллектора.
  */
-public class CountByDefaultCollectorLinear {
+public class CountByDefaultCollectorParallel {
     /**
      * Объект класса {@link Logger}, используемый для логирования.
      */
-    private static final Logger LOGGER = Logger.getLogger(CountByDefaultCollectorLinear.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CountByDefaultCollectorParallel.class.getName());
 
     /**
      * Главный метод, в котором происходит вызов всех методов для расчета. Также здесь выводится результат работы
@@ -32,10 +33,9 @@ public class CountByDefaultCollectorLinear {
      *                       характеристики.
      * @param delay          количество секунд, на которое нужно установить задержку.
      */
-    public static void countByDefaultCollectorLinear(ArrayList<Match> matchArrayList, int delay) {
+    public static void countByDefaultCollectorParallel(ArrayList<Match> matchArrayList, int delay) {
         int members1 = 2, members2 = 3;
         int score1 = 5, score2 = 10;
-        int length = 7;
         LocalDate date = LocalDate.ofEpochDay(378);
         LocalDateTime localDateTime = LocalDateTime.of(date, LocalTime.ofSecondOfDay(15 * 20 * 10));
         MatchType matchType = MatchType.DEATHMATCH;
@@ -45,15 +45,15 @@ public class CountByDefaultCollectorLinear {
                 
                 ----------------------CountByDefaultCollector----------------------
                 
-                countMatchesWithSpecifiedTeamsMembersCount=%d,
-                countMatchesWithSpecifiedTeamsScores=%d,
-                countMatchesWithSpecifiedStartDateAndTournamentNameLength=%d,
-                countMatchesWithSpecifiedType=%d
+                countMatchesWithSpecifiedTeamsMembersCount=%s,
+                countMatchesWithSpecifiedTeamsScores=%s,
+                countMatchesWithSpecifiedStartDate=%s,
+                countMatchesWithSpecifiedType=%s
                 
                 """.formatted(
                 countMatchesWithSpecifiedTeamsMembersCount(matchArrayList, members1, members2, delay),
                 countMatchesWithSpecifiedTeamsScores(matchArrayList, score1, score2),
-                countMatchesWithSpecifiedStartDateAndTournamentNameLength(matchArrayList, localDateTime, length),
+                countMatchesWithSpecifiedStartDate(matchArrayList, localDateTime),
                 countMatchesWithSpecifiedType(matchArrayList, matchType)
         ));
     }
@@ -68,19 +68,19 @@ public class CountByDefaultCollectorLinear {
      *                       данное значение.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private static long countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
-                                                                   int members2, int delay) {
+    private static Map<MatchType, Long> countMatchesWithSpecifiedTeamsMembersCount(@NotNull ArrayList<Match> matchArrayList, int members1,
+                                                                                   int members2, int delay) {
         try {
-            TimeUnit.SECONDS.sleep(delay);
+            TimeUnit.MILLISECONDS.sleep(delay);
             LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
         } catch (InterruptedException ex) {
             LOGGER.log(Level.WARNING, "Не удалось установить задержку!");
         }
-        return matchArrayList.stream().filter(match -> {
+        return matchArrayList.parallelStream().filter(match -> {
             Team team1 = match.getTeam1();
             Team team2 = match.getTeam2();
             return team1 != null && team1.getMembers().size() > members1 && team2 != null && team2.getMembers().size() > members2;
-        }).toList().size();
+        }).collect(Collectors.groupingBy(Match::getMatchType, Collectors.counting()));
     }
 
     /**
@@ -91,28 +91,25 @@ public class CountByDefaultCollectorLinear {
      * @param score2         счет второй команды. У команды 2 должно быть количество очков, равное данному значению.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private static int countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
+    private static Map<MatchType, Long> countMatchesWithSpecifiedTeamsScores(@NotNull ArrayList<Match> matchArrayList, int score1, int score2) {
 
         return matchArrayList.stream().filter(match -> match.getScoreTeam1() == score1 && match.getScoreTeam2() == score2)
-                .toList().size();
+                .collect(Collectors.groupingBy(Match::getMatchType, Collectors.counting()));
     }
 
     /**
-     * Метод рассчитывает количество матчей, которые начинаются после определенной даты, а также у которых длина
-     * названия турнира больше переданного значения.
+     * Метод рассчитывает количество матчей, которые начинаются после определенной даты.
      *
      * @param matchArrayList список матчей, среди которых будет производиться расчет статистических данных.
      * @param localDateTime  дата, после которой должен начаться матч.
-     * @param length         длина названия турнира. У турнира длина названия должна быть больше данного значения.
      * @return Количество матчей, удовлетворяющих условию.
      */
-    private static int countMatchesWithSpecifiedStartDateAndTournamentNameLength(@NotNull ArrayList<Match> matchArrayList,
-                                                                                 LocalDateTime localDateTime, int length) {
+    private static Map<MatchType, Long> countMatchesWithSpecifiedStartDate(@NotNull ArrayList<Match> matchArrayList,
+                                                                           LocalDateTime localDateTime) {
         return matchArrayList.stream().filter(match -> {
             LocalDateTime startTime = match.getStartDateTime();
-            Tournament tournament = match.getTournament();
-            return startTime != null && startTime.isAfter(localDateTime) && tournament != null && tournament.name() != null && tournament.name().length() == length;
-        }).toList().size();
+            return startTime != null && startTime.isAfter(localDateTime);
+        }).collect(Collectors.groupingBy(Match::getMatchType, Collectors.counting()));
     }
 
     /**
@@ -123,8 +120,8 @@ public class CountByDefaultCollectorLinear {
      * @return Количество матчей, удовлетворяющих условию.
      */
     @Contract(pure = true)
-    private static int countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
+    private static Map<MatchType, Long> countMatchesWithSpecifiedType(@NotNull ArrayList<Match> matchArrayList, MatchType matchType) {
         return matchArrayList.stream().filter(match -> match.getMatchType() != null && match.getMatchType() == matchType)
-                .toList().size();
+                .collect(Collectors.groupingBy(Match::getMatchType, Collectors.counting()));
     }
 }

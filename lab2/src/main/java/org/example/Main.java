@@ -1,7 +1,7 @@
 package org.example;
 
 import org.example.entity.Match;
-import org.example.task.forkjoinpool.CustomForkJoinPool;
+import org.example.task.CustomForkJoinPoolTask;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -19,9 +19,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 
+import static org.example.task.CountByDefaultCollectorParallel.countByDefaultCollectorParallel;
 import static org.example.task.CountByLoop.countByLoop;
-import static org.example.task.parallel.CountByCustomCollectorParallel.countByCustomCollectorParallel;
-import static org.example.task.parallel.CountByDefaultCollectorParallel.countByDefaultCollectorParallel;
 import static org.example.util.Generator.generateMatchCollection;
 
 /**
@@ -37,7 +36,7 @@ import static org.example.util.Generator.generateMatchCollection;
 public class Main {
     /**
      * Количество секунд для задержки.
-     **/
+     */
     private int delay;
 
     private ArrayList<Match> matchArrayList;
@@ -48,7 +47,7 @@ public class Main {
 
     @Setup
     public void setupMethod() {
-        delay = 0;
+        delay = 5;
         matchArrayList = generateMatchCollection(5000);
     }
 
@@ -63,13 +62,8 @@ public class Main {
     }
 
     @Benchmark
-    public void executeCustomCollector() {
-        countByCustomCollectorParallel(matchArrayList, delay);
-    }
-
-    @Benchmark
     public void executeCustomForkJoinPool() {
-        CustomForkJoinPool counter = new CustomForkJoinPool(matchArrayList, delay);
+        CustomForkJoinPoolTask counter = new CustomForkJoinPoolTask(matchArrayList, delay);
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         forkJoinPool.invoke(counter);
     }
