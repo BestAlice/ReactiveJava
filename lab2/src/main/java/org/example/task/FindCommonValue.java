@@ -31,7 +31,7 @@ public class FindCommonValue {
 
         int defaultCommonVal = -1;
 
-        for (int i = 100; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps; i *= 5) {
+        for (int i = 500; Math.abs(timeDefaultLinear - timeDefaultParallel) > eps; i = i < 1562500 ? i * 500 : i + 500) {
             ArrayList<Match> matchArrayList = generateMatchCollection(i);
 
             long start, elapsedTime;
@@ -50,6 +50,8 @@ public class FindCommonValue {
                 elapsedTime = System.currentTimeMillis() - start;
                 timeDefaultLinear = elapsedTime / 1000F / 12;
                 defaultCommonVal = i;
+
+                System.out.println(i + " " + timeDefaultParallel + " " + timeDefaultLinear);
             }
         }
         System.out.printf("""

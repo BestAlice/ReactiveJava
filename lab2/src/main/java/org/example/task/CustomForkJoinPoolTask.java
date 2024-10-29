@@ -90,7 +90,7 @@ public class CustomForkJoinPoolTask extends RecursiveTask<Integer> {
                                                            int members2, int delay) {
         try {
             TimeUnit.SECONDS.sleep(delay);
-            LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
+            LOGGER.log(Level.INFO, "Установлена задержка в %d миллисекунд!".formatted(delay));
         } catch (InterruptedException ex) {
             LOGGER.log(Level.WARNING, "Не удалось установить задержку!");
         }

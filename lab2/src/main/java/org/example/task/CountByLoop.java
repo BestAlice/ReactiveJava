@@ -71,7 +71,7 @@ public class CountByLoop {
                                                                                              int members2, int delay) {
         try {
             TimeUnit.MILLISECONDS.sleep(delay);
-            LOGGER.log(Level.INFO, "Установлена задержка в %d секунд!".formatted(delay));
+            LOGGER.log(Level.INFO, "Установлена задержка в %d миллисекунд!".formatted(delay));
         } catch (InterruptedException ex) {
             LOGGER.log(Level.WARNING, "Не удалось установить задержку!");
         }
