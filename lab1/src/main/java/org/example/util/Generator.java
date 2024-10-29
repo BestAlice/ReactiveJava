@@ -127,7 +127,7 @@ public class Generator {
      */
     private static @Nullable MatchType generateMatchType() {
         MatchType[] types = MatchType.values();
-        return isReturnNull() ? null : types[generateIntInRange(0, types.length - 1)];
+        return types[generateIntInRange(0, types.length - 1)];
     }
 
     /**
