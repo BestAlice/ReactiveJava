@@ -11,16 +11,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 /**
  * @author Kirill "Tamada" Simovin
  */
 public class ReactiveTask {
-    /**
-     * Объект класса {@link Logger}, используемый для логирования.
-     */
-    private final Logger LOGGER = Logger.getLogger(ReactiveTask.class.getName());
 
     private final Observable<Match> observable;
 
