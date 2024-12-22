@@ -1,6 +1,7 @@
 package com.kast.hltv.common.thread;
 
 import com.kast.hltv.common.abstraction.match.Match;
+import com.kast.hltv.parser.HLTVDataParser;
 
 /**
  * @author Kirill "Tamada" Simovin
@@ -24,7 +25,7 @@ public class ThreadMatch extends Thread {
                     break;
                 }
             }
-//            hltvDataCollector.loadAllLife(match.getMatchLink());
+           new HLTVDataParser().loadAllLife(match.getMatchLink());
         } catch (Exception e) {
             e.printStackTrace();
         }

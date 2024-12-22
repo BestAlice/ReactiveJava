@@ -1,6 +1,7 @@
 package com.kast.hltv.data;
 
 import com.kast.hltv.common.util.Util;
+import com.kast.hltv.parser.HLTVDataParser;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.scheduling.annotation.Scheduled;
@@ -28,24 +29,9 @@ public class HLTVDataCollector {
     @Scheduled(fixedDelay = "24h", condition = "#{!this.paused}")
     void parseHLTVData() {
         LOG.info("{} HLTV data parser started!", new SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(new Date()));
-        try {
-            Document document = Util.getHtml("https://www.hltv.org");
-            if (document == null) {
-                LOG.error("An exception occurred during HLTV parsing! Document is null!");
-                return;
-            }
-            Elements matches = document.select("body > div.bgPadding > div > div.colCon > div.rightCol > aside:nth-child(1) > div.top-border-hide");
-            ArrayList<Element> listEle = new ArrayList<>(matches.select("a"));
-            Map<String, Boolean> links = new LinkedHashMap<>();
-            for (Element element : listEle) {
-                String key = "https://www.hltv.org" + element.attr("href");
-                boolean val = element.getElementsByAttribute("filteraslive").equals(element.getElementsByAttributeValueContaining("filteraslive", "true"));
-                links.put(key, val);
-            }
-            for (String link : links.keySet()){
-                System.out.println(link);
-            }
-        } catch (Exception e) {
+        try{
+            new HLTVDataParser().startHLTVParser();
+        } catch (RuntimeException e) {
             LOG.error("An exception occurred during HLTV parsing! Exception: {}", e.getMessage());
         }
     }
