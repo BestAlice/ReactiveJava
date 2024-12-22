@@ -8,7 +8,6 @@ import com.kast.hltv.parser.HLTVDataParser;
  */
 public class ThreadMatch extends Thread {
     private Match match;
-//    private HLTVDataCollector hltvDataCollector;
 
     public ThreadMatch(Match match) {
         this.match = match;

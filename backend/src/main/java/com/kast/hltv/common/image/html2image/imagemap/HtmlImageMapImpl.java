@@ -3,6 +3,9 @@ package com.kast.hltv.common.image.html2image.imagemap;
 import com.kast.hltv.common.image.html2image.exception.RenderException;
 import com.kast.hltv.common.image.html2image.renderer.LayoutHolder;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -53,7 +56,7 @@ public class HtmlImageMapImpl implements HtmlImageMap {
     }
 
     @Override
-    public void saveImageMap(Writer writer, String mapName, String imageURL) {
+    public void saveImageMap(@NotNull Writer writer, String mapName, String imageURL) {
         try {
             writer.append("<map name=\"").append(mapName).append("\">\n");
             for (Collection<ElementBox> boxes : getClickableBoxes().values()) {
@@ -92,7 +95,7 @@ public class HtmlImageMapImpl implements HtmlImageMap {
     }
 
     @Override
-    public void saveImageMapDocument(Writer writer, String imageURL, boolean closeWriter) {
+    public void saveImageMapDocument(@NotNull Writer writer, String imageURL, boolean closeWriter) {
         try {
             writer.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
             writer.append("<html>\n<head><style>area {cursor: pointer;}</style></head>\n");
@@ -204,7 +207,7 @@ public class HtmlImageMapImpl implements HtmlImageMap {
         return null;
     }
 
-    private Element getClickableElement(Styleable box) {
+    private @Nullable Element getClickableElement(@NotNull Styleable box) {
         Element element = box.getElement();
         while (element != null) {
             if (isClickable(element)) {
@@ -226,7 +229,8 @@ public class HtmlImageMapImpl implements HtmlImageMap {
         return false;
     }
 
-    private static HashSet<String> stringSet(String... items) {
-        return new HashSet<String>(Arrays.asList(items));
+    @Contract("_ -> new")
+    private static @NotNull HashSet<String> stringSet(String... items) {
+        return new HashSet<>(Arrays.asList(items));
     }
 }

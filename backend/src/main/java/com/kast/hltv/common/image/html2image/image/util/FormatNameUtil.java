@@ -1,6 +1,8 @@
 
 package com.kast.hltv.common.image.html2image.image.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ public class FormatNameUtil {
                 return type;
         }
 
-        public static String formatForFilename(String fileName) {
+        public static String formatForFilename(@NotNull String fileName) {
                 final int dotIndex = fileName.lastIndexOf('.');
                 if (dotIndex < 0) {
                         return DEFAULT_FORMAT;

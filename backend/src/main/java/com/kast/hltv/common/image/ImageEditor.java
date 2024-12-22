@@ -8,6 +8,7 @@ import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.apache.commons.math3.util.Precision;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -60,7 +61,7 @@ public class ImageEditor {
     }
 
     // Before call method DOWNLOAD IMAGES OF TEAM
-    public synchronized static void fillImage(Match match, Map<String, String[]> mapName_perWin) throws Exception {
+    public synchronized static void fillImage(@NotNull Match match, @NotNull Map<String, String[]> mapName_perWin) throws Exception {
         String leftTeamName = match.getMatchDoc().select("body > div.bgPadding > div > div.colCon > div.contentCol > div.match-page > div.standard-box.teamsBox > div:nth-child(1) > div > a > div").text();
         String rightTeamName = match.getMatchDoc().select("body > div.bgPadding > div > div.colCon > div.contentCol > div.match-page > div.standard-box.teamsBox > div:nth-child(3) > div > a > div").text();
         String dateOfMatch = match.getMatchDoc().select("body > div.bgPadding > div > div.colCon > div.contentCol > div.match-page > div.standard-box.teamsBox > div.timeAndEvent > div.date").text();
@@ -163,7 +164,7 @@ public class ImageEditor {
         file.delete();
     }
 
-    private static void downloadImages(Match match) throws Exception {
+    private static void downloadImages(@NotNull Match match) throws Exception {
         String leftTeamName = match.getMatchDoc().select("body > div.bgPadding > div > div.colCon > div.contentCol > div.match-page > div.standard-box.teamsBox > div:nth-child(1) > div > a > div").text();
         String leftImageLink = match.getMatchDoc().select("body > div.bgPadding > div > div.colCon > div.contentCol > div.match-page > div.standard-box.teamsBox > div:nth-child(1) > div > a").first().child(0).attr("src");
         imageWriter(leftTeamName, leftImageLink, match, 1);
@@ -223,7 +224,7 @@ public class ImageEditor {
         ImageIO.write(thumbnail, "png", new File("src/main/java/Images/imageLibrary/" + imageName + ".png"));
     }
 
-    private static void printTextToImage(String whatToWrite, int x, int y, int font, int fontSize, Color color) throws IOException {
+    private static void printTextToImage(@NotNull String whatToWrite, int x, int y, int font, int fontSize, Color color) throws IOException {
         BufferedImage image = ImageIO.read(new File("src/main/java/Images/imageLibrary/" + "result" + ".png"));
         Graphics2D g = (Graphics2D) image.getGraphics();
         g.setFont(new Font("Uroob", font, fontSize));

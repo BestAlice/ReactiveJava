@@ -1,6 +1,7 @@
 package com.kast.hltv.dto.player;
 
 import com.kast.hltv.common.util.Util;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -96,7 +97,7 @@ public class Player {
         return mapsPlayed;
     }
 
-    public Player(Document playerDoc) {
+    public Player(@NotNull Document playerDoc) {
         this.playerDoc = playerDoc;
 
         Elements statBlock = playerDoc.select("body > div.bgPadding > div > div.colCon > div.contentCol > div.stats-section.stats-player.stats-player-overview > div.statistics > div");
@@ -161,7 +162,7 @@ public class Player {
 
     }
 
-    private Double getStat(Elements from, String selector) {
+    private @NotNull Double getStat(Elements from, String selector) {
         try {
             return Double.parseDouble(from.select(selector).text());
         } catch (Exception e) {

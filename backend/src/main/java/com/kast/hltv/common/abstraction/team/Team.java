@@ -1,11 +1,15 @@
 package com.kast.hltv.common.abstraction.team;
 
 import com.kast.hltv.common.abstraction.match.Match;
+import com.kast.hltv.data.HLTVDataCollector;
 import com.kast.hltv.dto.player.Player;
 import com.kast.hltv.common.util.Util;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ import java.util.List;
  * @author Kirill "Tamada" Simovin
  */
 public abstract class Team {
+    private static final Logger LOG = LoggerFactory.getLogger(Team.class);
     private int currentRanking;
     private final String map;
     private String teamName;
@@ -43,7 +48,7 @@ public abstract class Team {
 
     public abstract String get3mFormat() throws ParseException;
 
-    private ArrayList<Player> generateListOfPlayers(String leftOrRight) throws Exception {
+    private @NotNull ArrayList<Player> generateListOfPlayers(@NotNull String leftOrRight) throws Exception {
         Elements players = null;
         if (leftOrRight.equals("left")) {
             players = match.getMatchDoc().select("body > div.bgPadding > div > div.colCon > div.contentCol > div.match-page > div.lineups > div > div:nth-child(1) > div.players > table > tbody > tr:nth-child(1)");
@@ -59,7 +64,7 @@ public abstract class Team {
             Player player = new Player(playerDoc);
             playersList.add(player);
             if (player.getKDRatio() == 0.0) {
-                System.out.println("NO ONE PLAYED MAP BEFORE");
+                LOG.info("NO ONE PLAYED MAP BEFORE");
                 break;
             }
         }
@@ -78,7 +83,7 @@ public abstract class Team {
                 Player playerCl = new Player(playerDoc);
                 playersList.add(playerCl);
                 if (playerCl.getKDRatio() == 0.0) {
-                    System.out.println("NO ONE PLAYED MAP BEFORE");
+                    LOG.info("NO ONE PLAYED MAP BEFORE");
                     break;
                 }
             }
@@ -87,7 +92,7 @@ public abstract class Team {
     }
 
 
-    public Team(String map, Match match, String leftOrRight) throws Exception {
+    public Team(String map, Match match, @NotNull String leftOrRight) throws Exception {
         this.match = match;
         this.map = map;
         if (leftOrRight.equals("left")) {

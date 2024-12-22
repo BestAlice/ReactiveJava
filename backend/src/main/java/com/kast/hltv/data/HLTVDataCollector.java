@@ -1,22 +1,15 @@
 package com.kast.hltv.data;
 
-import com.kast.hltv.common.util.Util;
 import com.kast.hltv.parser.HLTVDataParser;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.runtime.event.annotation.EventListener;
 import io.micronaut.scheduling.annotation.Scheduled;
 import jakarta.inject.Singleton;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author Kirill "Tamada" Simovin
@@ -29,7 +22,7 @@ public class HLTVDataCollector {
     @Scheduled(fixedDelay = "24h", condition = "#{!this.paused}")
     void parseHLTVData() {
         LOG.info("{} HLTV data parser started!", new SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(new Date()));
-        try{
+        try {
             new HLTVDataParser().startHLTVParser();
         } catch (RuntimeException e) {
             LOG.error("An exception occurred during HLTV parsing! Exception: {}", e.getMessage());

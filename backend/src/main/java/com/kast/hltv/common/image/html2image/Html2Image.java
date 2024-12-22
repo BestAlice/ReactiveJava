@@ -8,6 +8,7 @@ import com.kast.hltv.common.image.html2image.pdf.PdfRenderer;
 import com.kast.hltv.common.image.html2image.pdf.PdfRendererImpl;
 import com.kast.hltv.common.image.html2image.renderer.ImageRenderer;
 import com.kast.hltv.common.image.html2image.renderer.ImageRendererImpl;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 
 import java.io.File;
@@ -50,43 +51,43 @@ public class Html2Image {
 		return imageRenderer;
 	}
 
-	public static Html2Image fromDocument(Document document) {
+	public static @NotNull Html2Image fromDocument(Document document) {
 		final Html2Image html2Image = new Html2Image();
 		html2Image.getParser().setDocument(document);
 		return html2Image;
 	}
 
-	public static Html2Image fromHtml(String html) {
+	public static @NotNull Html2Image fromHtml(String html) {
 		final Html2Image html2Image = new Html2Image();
 		html2Image.getParser().loadHtml(html);
 		return html2Image;
 	}
 
-	public static Html2Image fromURL(URL url) {
+	public static @NotNull Html2Image fromURL(URL url) {
 		final Html2Image html2Image = new Html2Image();
 		html2Image.getParser().load(url);
 		return html2Image;
 	}
 
-	public static Html2Image fromURI(URI uri) {
+	public static @NotNull Html2Image fromURI(URI uri) {
 		final Html2Image html2Image = new Html2Image();
 		html2Image.getParser().load(uri);
 		return html2Image;
 	}
 
-	public static Html2Image fromFile(File file) {
+	public static @NotNull Html2Image fromFile(File file) {
 		final Html2Image html2Image = new Html2Image();
 		html2Image.getParser().load(file);
 		return html2Image;
 	}
 
-	public static Html2Image fromReader(Reader reader) {
+	public static @NotNull Html2Image fromReader(Reader reader) {
 		final Html2Image html2Image = new Html2Image();
 		html2Image.getParser().load(reader);
 		return html2Image;
 	}
 
-	public static Html2Image fromInputStream(InputStream inputStream) {
+	public static @NotNull Html2Image fromInputStream(InputStream inputStream) {
 		final Html2Image html2Image = new Html2Image();
 		html2Image.getParser().load(inputStream);
 		return html2Image;

@@ -2,6 +2,7 @@ package com.kast.hltv.common.image.html2image.parser;
 
 import org.apache.xerces.parsers.DOMParser;
 import org.cyberneko.html.HTMLConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -101,17 +102,17 @@ public class HtmlParserImpl implements HtmlParser {
     }
 
     @Override
-    public void load(File file) {
+    public void load(@NotNull File file) {
         load(file.toURI());
     }
 
     @Override
-    public void load(URL url) {
+    public void load(@NotNull URL url) {
         loadURI(url.toExternalForm());
     }
 
     @Override
-    public void load(URI uri) {
+    public void load(@NotNull URI uri) {
         loadURI(uri.toString());
     }
 

@@ -1,5 +1,6 @@
 package com.kast.hltv.common.image.html2image.imagemap;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
 import java.util.Collection;
@@ -54,7 +55,7 @@ public class ElementBox {
 		return width <= 0 || height <= 0;
 	}
 
-	public boolean containedIn(Collection<ElementBox> elementBoxes) {
+	public boolean containedIn(@NotNull Collection<ElementBox> elementBoxes) {
 		for (ElementBox box : elementBoxes) {
 			if (containedIn(box)) {
 				return true;
@@ -63,7 +64,7 @@ public class ElementBox {
 		return false;
 	}
 
-	public boolean containedIn(ElementBox box) {
+	public boolean containedIn(@NotNull ElementBox box) {
 		return getTop() >= box.getTop() && getLeft() >= box.getTop()
 				&& getBottom() <= box.getBottom() && getRight() <= box.getRight();
 	}

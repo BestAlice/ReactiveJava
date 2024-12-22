@@ -4,6 +4,7 @@ package com.kast.hltv.common.image.html2image.image;
 import com.kast.hltv.common.image.html2image.image.util.FormatNameUtil;
 import com.kast.hltv.common.image.html2image.image.util.SynchronousHTMLEditorKit;
 import com.kast.hltv.common.image.html2image.link.LinkInfo;
+import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -130,7 +131,7 @@ public class HtmlImageGenerator {
         saveAsImage(new File(file));
     }
 
-    public void saveAsImage(File file) {
+    public void saveAsImage(@NotNull File file) {
         BufferedImage image = getBufferedImage();
 
         BufferedImage bufferedImageToWrite = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);

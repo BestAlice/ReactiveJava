@@ -51,8 +51,7 @@ public class LifeMatch extends Match {
             day = matcher.group(0);
         }
         if (Integer.parseInt(day) < 10) {
-            StringBuilder builder = new StringBuilder();
-            day = builder.append("0").append(day).toString();
+            day = "0" + day;
         }
         String month = "";
         for (Months monthS : Months.values()) {

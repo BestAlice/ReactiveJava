@@ -2,6 +2,7 @@ package com.kast.hltv.common.generator;
 
 import com.kast.hltv.common.abstraction.team.Team;
 import com.kast.hltv.dto.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,7 @@ public class AdvantageGenerator {
     private final ArrayList<Player> firstListOfPlayers;
     private final ArrayList<Player> secondListOfPlayers;
 
-    public AdvantageGenerator(Team firstTeam, Team secondTeam) {
+    public AdvantageGenerator(@NotNull Team firstTeam, @NotNull Team secondTeam) {
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
         this.firstListOfPlayers = firstTeam.getListOfPlayers();

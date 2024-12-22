@@ -2,6 +2,7 @@ package com.kast.hltv.common.image.html2image.renderer;
 
 import com.kast.hltv.common.image.html2image.exception.RenderException;
 import com.kast.hltv.common.image.html2image.parser.DocumentHolder;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.render.Box;
 import org.xhtmlrenderer.simple.Graphics2DRenderer;
@@ -207,7 +208,7 @@ public class ImageRendererImpl implements ImageRenderer {
 		}
 	}
 
-	private FSImageWriter getImageWriter(String imageFormat) {
+	private @NotNull FSImageWriter getImageWriter(String imageFormat) {
 		FSImageWriter imageWriter = new FSImageWriter(imageFormat);
 		imageWriter.setWriteCompressionMode(writeCompressionMode);
 		imageWriter.setWriteCompressionQuality(writeCompressionQuality);
