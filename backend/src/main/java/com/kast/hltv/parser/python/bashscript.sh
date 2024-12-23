@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# shellcheck disable=SC2164
-cd src/main/java/com/kast/hltv/parser/python
-# shellcheck disable=SC2086
-python3 script2.py $1 $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17}

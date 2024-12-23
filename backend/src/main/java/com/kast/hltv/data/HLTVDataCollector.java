@@ -23,10 +23,13 @@ public class HLTVDataCollector {
     void parseHLTVData() {
         LOG.info("{} HLTV data parser started!", new SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(new Date()));
         try {
-            new HLTVDataParser().startHLTVParser();
-        } catch (RuntimeException e) {
+//            new HLTVDataParser().startHLTVParser();
+            new HLTVDataParser().loadMatchInfo("https://www.hltv.org/matches/2378071/wopa-vs-heimo-european-pro-league-2nd-division-season-18", 0);
+        } catch (Exception e) {
+            e.printStackTrace();
             LOG.error("An exception occurred during HLTV parsing! Exception: {}", e.getMessage());
         }
+        LOG.info("{} HLTV data parser ended!", new SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(new Date()));
     }
 
     public boolean isPaused() {

@@ -69,51 +69,12 @@
       <scope>compile</scope>
     </dependency>
 
-    <!--  Apache Common Math3  -->
+    <!--  Lombok  -->
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-math3</artifactId>
-      <version>3.6.1</version>
-    </dependency>
-
-    <!--  Thumbnails  -->
-    <dependency>
-      <groupId>net.coobird</groupId>
-      <artifactId>thumbnailator</artifactId>
-      <version>0.4.20</version>
-    </dependency>
-
-    <!--  Apache Batik  -->
-    <dependency>
-      <groupId>org.apache.xmlgraphics</groupId>
-      <artifactId>batik-transcoder</artifactId>
-      <version>1.13</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.xmlgraphics</groupId>
-      <artifactId>batik-codec</artifactId>
-      <version>1.13</version>
-    </dependency>
-
-    <!--  XHtml renderer  -->
-    <dependency>
-      <groupId>org.xhtmlrenderer</groupId>
-      <artifactId>core-renderer</artifactId>
-      <version>R8</version>
-    </dependency>
-
-    <!--  Apache commons lang  -->
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.5</version>
-    </dependency>
-
-    <!--  Html to Image  -->
-    <dependency>
-      <groupId>nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-      <version>1.9.6.2</version>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.36</version>
+      <scope>provided</scope>
     </dependency>
 
     <!--  Tests  -->
@@ -164,6 +125,7 @@
               <artifactId>micronaut-http-validation</artifactId>
               <version>${micronaut.core.version}</version>
             </path>
+
             <path>
               <groupId>io.micronaut.serde</groupId>
               <artifactId>micronaut-serde-processor</artifactId>
@@ -174,6 +136,12 @@
                   <artifactId>micronaut-inject</artifactId>
                 </exclusion>
               </exclusions>
+            </path>
+
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>1.18.36</version>
             </path>
           </annotationProcessorPaths>
           <compilerArgs>
