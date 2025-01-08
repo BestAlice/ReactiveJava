@@ -1,0 +1,12 @@
+.subscribed-match {
+    display: flex;
+    flex-direction: column;
+}
+
+.subscribed-match p {
+    font-family: var(--text-medium-lcg);
+    font-size: 14px;
+    margin: 0px;
+    margin-bottom: 5px;
+    color: white;
+}

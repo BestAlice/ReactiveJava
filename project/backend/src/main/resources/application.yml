@@ -1,0 +1,9 @@
+mongodb:
+  uri: mongodb://mongouser:mongopass@localhost:27017
+
+micronaut:
+  application:
+    name: kast
+  server:
+    cors:
+      enabled: true
