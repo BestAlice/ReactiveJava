@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Subscriptions.css";
 import { request } from "../../utils/Utils";
 import SubscribeMatch from "../../components/SubscribeMatch/SubscribeMatch";
+import Preloader from "../../components/Preloader/Preloader";
 
 function Subscriptions() {
     const [subscribedMatches, setSubscribedMatches] = useState(null);
@@ -23,7 +24,7 @@ function Subscriptions() {
                         <SubscribeMatch match={match} key={match.id} />
                     )
                     :
-                    <></>
+                    <Preloader />
             }
         </div>
     );

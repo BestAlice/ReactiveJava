@@ -26,7 +26,7 @@ public class HLTVDataCollector implements IPaused {
     public void parseHLTVData() {
         LOG.info("{} HLTV data parser started!", new SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(new Date()));
         try {
-//           hltvDataParser.startHLTVParser(0);
+           hltvDataParser.startHLTVParser(0);
         } catch (Exception e) {
             LOG.error("An exception occurred during HLTV parsing! Exception: {}", e.getMessage());
         }
