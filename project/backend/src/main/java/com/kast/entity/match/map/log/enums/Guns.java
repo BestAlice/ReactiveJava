@@ -2,9 +2,6 @@ package com.kast.entity.match.map.log.enums;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 public enum Guns {
     AK47("ak47"),
     AUG("aug"),

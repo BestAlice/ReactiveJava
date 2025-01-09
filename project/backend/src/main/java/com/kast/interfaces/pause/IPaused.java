@@ -3,9 +3,6 @@ package com.kast.interfaces.pause;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.runtime.event.annotation.EventListener;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 public interface IPaused {
     public boolean isPaused();
 

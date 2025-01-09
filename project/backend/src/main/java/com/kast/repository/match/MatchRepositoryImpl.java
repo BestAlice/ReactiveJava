@@ -15,9 +15,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Singleton
 public class MatchRepositoryImpl implements MatchRepository {
     private final MongoClient mongoClient;

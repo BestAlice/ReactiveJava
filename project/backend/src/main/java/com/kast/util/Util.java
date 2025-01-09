@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 public class Util {
     private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 

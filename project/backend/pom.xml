@@ -48,31 +48,12 @@
       <scope>runtime</scope>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.11.0</version>
-    </dependency>
-
-<!--    <dependency>-->
-<!--      <groupId>org.jboss.spec.javax.websocket</groupId>-->
-<!--      <artifactId>jboss-websocket-api_1.1_spec</artifactId>-->
-<!--      <scope>provided</scope>-->
-<!--    </dependency>-->
-
     <!--  Micronaut Websocket  -->
     <dependency>
       <groupId>io.micronaut</groupId>
       <artifactId>micronaut-websocket</artifactId>
       <scope>compile</scope>
     </dependency>
-
-<!--    <dependency>-->
-<!--      <groupId>org.java-websocket</groupId>-->
-<!--      <artifactId>Java-WebSocket</artifactId>-->
-<!--      <version>1.6.0</version>-->
-<!--    </dependency>-->
 
     <!-- Micronaut RxJava -->
     <dependency>

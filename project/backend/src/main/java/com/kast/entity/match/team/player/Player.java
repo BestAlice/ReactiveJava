@@ -6,9 +6,6 @@ import io.micronaut.core.annotation.Creator;
 import io.micronaut.serde.annotation.Serdeable;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Serdeable
 public class Player extends BaseInfo {
     @Creator

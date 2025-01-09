@@ -11,9 +11,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 public interface MatchRepository {
     Single<Match> save(@NonNull @NotNull @Valid Match match);
 

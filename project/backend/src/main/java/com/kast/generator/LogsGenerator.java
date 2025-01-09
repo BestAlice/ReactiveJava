@@ -1,14 +1,11 @@
 package com.kast.generator;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.kast.entity.match.Match;
 import com.kast.entity.match.map.MatchMap;
 import com.kast.entity.match.map.log.MatchMapLog;
 import com.kast.entity.match.map.log.enums.LogSide;
 import com.kast.entity.match.map.log.enums.LogType;
 import com.kast.entity.match.team.Team;
-import com.kast.gson.GsonLocalDateTimeAdapter;
 import com.kast.interfaces.pause.IPaused;
 import com.kast.repository.match.MatchRepositoryImpl;
 import io.micronaut.context.event.StartupEvent;
@@ -30,9 +27,6 @@ import java.util.Map;
 
 import static org.instancio.Select.field;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Singleton
 public class LogsGenerator implements IPaused {
     private static final Logger LOG = LoggerFactory.getLogger(LogsGenerator.class);
@@ -56,7 +50,7 @@ public class LogsGenerator implements IPaused {
             LOG.warn("List of matches is null, returning!");
             return;
         }
-        
+
         Observable.fromIterable(liveMatches)
                 .flatMap(match -> Observable
                         .just(match)
@@ -92,12 +86,12 @@ public class LogsGenerator implements IPaused {
 
             webSocketBroadcaster.broadcastSync(logs, s -> {
                 Map<String, Object> uriVariables = s.getUriVariables().asMap();
-                if (uriVariables.isEmpty()){
+                if (uriVariables.isEmpty()) {
                     return false;
                 }
 
                 Object id = uriVariables.get("id");
-                if (id == null){
+                if (id == null) {
                     return false;
                 }
 

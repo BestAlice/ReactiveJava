@@ -2,9 +2,6 @@ package com.kast.hltv.parser.enums;
 
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 public enum Months {
 
     January("January", "01"),

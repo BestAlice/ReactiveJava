@@ -6,9 +6,6 @@ import io.micronaut.serde.annotation.Serdeable;
 import org.bson.codecs.pojo.annotations.BsonCreator;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Serdeable
 public abstract class BaseInfo {
     @BsonProperty("country")

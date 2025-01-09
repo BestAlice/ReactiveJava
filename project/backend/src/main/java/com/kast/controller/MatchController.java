@@ -10,9 +10,6 @@ import io.micronaut.http.annotation.Post;
 import io.reactivex.rxjava3.core.Single;
 import reactor.core.publisher.Flux;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Controller("/match")
 public class MatchController {
     private final MatchService matchService;

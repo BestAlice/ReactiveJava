@@ -31,9 +31,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Singleton
 public class HLTVDataParser {
     private static final Logger LOG = LoggerFactory.getLogger(HLTVDataParser.class);

@@ -11,9 +11,6 @@ import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Singleton
 public class MatchService {
     private final MatchRepositoryImpl matchRepository;

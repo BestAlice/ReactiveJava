@@ -10,9 +10,6 @@ import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.ArrayList;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Serdeable
 public class MatchMap {
     @BsonProperty("map")

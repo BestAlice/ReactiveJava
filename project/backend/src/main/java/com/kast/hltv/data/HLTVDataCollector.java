@@ -11,9 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @Singleton
 public class HLTVDataCollector implements IPaused {
     private static final Logger LOG = LoggerFactory.getLogger(HLTVDataCollector.class);

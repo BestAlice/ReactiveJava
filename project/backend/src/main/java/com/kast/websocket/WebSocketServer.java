@@ -13,9 +13,6 @@ import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Kirill "Tamada" Simovin
- */
 @ServerWebSocket("/ws/matches/{id}")
 public class WebSocketServer {
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketServer.class);
